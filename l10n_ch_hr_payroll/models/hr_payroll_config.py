@@ -45,6 +45,7 @@ class HrPayrollConfig(models.TransientModel):
     @api.model
     def _get_default_provision13(self):
         return self.search_account_by_rule([
+            ('l10n_ch_hr_payroll.CLEAR_PROVISION_13', 'debit'),
             ('l10n_ch_hr_payroll.PROVISION_13', 'credit')])
 
     @api.model
@@ -372,16 +373,17 @@ class HrPayrollConfig(models.TransientModel):
                 'l10n_ch_hr_payroll.BASIC_CH',
                 'l10n_ch_hr_payroll.LAA_E',
                 'l10n_ch_hr_payroll.LCA_E',
+                'l10n_ch_hr_payroll.CLEAR_PROVISION_13'.
                 'l10n_ch_hr_payroll.LPP_E'
                 ], config.cc, 'credit')
             config.assign_account_to_rule([
-                'l10n_ch_hr_payroll.NET_CH'
+                'l10n_ch_hr_payroll.NET_CH',
+                'l10n_ch_hr_payroll.PROVISION_13'
                 ], config.cc, 'debit')
 
             # basic
             config.assign_account_to_rule([
-                'l10n_ch_hr_payroll.BASIC_CH',
-                'l10n_ch_hr_payroll.PROVISION_13',
+                'l10n_ch_hr_payroll.BASIC_CH'
             ], config.basic, 'debit')
 
             # net
@@ -391,7 +393,11 @@ class HrPayrollConfig(models.TransientModel):
             # provision 13
             config.assign_account_to_rule([
                 'l10n_ch_hr_payroll.PROVISION_13'
-                ], config.net, 'credit')
+                ], config.provision13, 'credit')
+            # clear provision 13
+            config.assign_account_to_rule([
+                'l10n_ch_hr_payroll.CLEAR_PROVISION_13'
+                ], config.provision13, 'debit')
 
             # avs_d
             config.assign_account_to_rule([
@@ -405,6 +411,7 @@ class HrPayrollConfig(models.TransientModel):
                 'l10n_ch_hr_payroll.PC_F_VD_C',
                 'l10n_ch_hr_payroll.PC_F_VD_E'
                 ], config.avs_d, 'debit')
+
             config.assign_account_to_rule([
                 'l10n_ch_hr_payroll.FADMIN'
                 ], config.avs_d, 'credit')
