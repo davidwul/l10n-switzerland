@@ -438,10 +438,32 @@ else:
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 if payslip.pay_13_salary:
-    result = contract.provision_13_salary+contract.wage*(employee.company_id.yearlySalaries-12)/12
+    if payslip.wage_type == 'hour':
+    amount = contract.wage*payslip.worked_hours
+            else:
+    amount = contract.wage*payslip.working_rate/100
+    result = contract.provision_13_salary+amount*(employee.company_id.yearlySalaries-12)/12
 else:
-    result = 0          </field>
-        <field name="category_id" ref="hr_payroll.BASIC"/>
+    result = 0</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
+    </record>
+    <record id="CLEAR_PROVISION_13" model="hr.salary.rule">
+        <field name="appears_on_payslip">False</field>
+        <field name="code">CLEAR_PROVISION_13</field>
+        <field name="condition_select">none</field>
+        <field name="name">Clear provision 13 when paid</field>
+        <field name="sequence" eval="1"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if payslip.pay_13_salary:
+    if payslip.wage_type == 'hour':
+    amount = contract.wage*payslip.worked_hours
+            else:
+    amount = contract.wage*payslip.working_rate/100
+    result = contract.provision_13_salary+amount*(employee.company_id.yearlySalaries-12)/12 + PROVISION_13
+else:
+    result = 0</field>
+        <field name="category_id" ref="hr_payroll.COMP"/>
     </record>
     <record id="GROSS_CH" model="hr.salary.rule">
         <field name="amount_select">code</field>
