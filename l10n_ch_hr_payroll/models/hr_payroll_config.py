@@ -32,8 +32,7 @@ class HrPayrollConfig(models.TransientModel):
         all_equal = False
 
         all_equal = self.search_account_by_rule([
-            ('l10n_ch_hr_payroll.BASIC_CH', 'debit'),
-            ('l10n_ch_hr_payroll.PROVISION_13', 'debit')])
+            ('l10n_ch_hr_payroll.BASIC_CH', 'debit')])
 
         return all_equal
 

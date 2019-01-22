@@ -439,9 +439,10 @@ else:
         <field name="amount_python_compute">
 if payslip.pay_13_salary:
     if payslip.wage_type == 'hour':
-    amount = contract.wage*payslip.worked_hours
-            else:
-    amount = contract.wage*payslip.working_rate/100
+        amount = contract.wage*payslip.worked_hours
+    else:
+        amount = contract.wage*payslip.working_rate/100
+
     result = contract.provision_13_salary+amount*(employee.company_id.yearlySalaries-12)/12
 else:
     result = 0</field>
@@ -457,9 +458,10 @@ else:
         <field name="amount_python_compute">
 if payslip.pay_13_salary:
     if payslip.wage_type == 'hour':
-    amount = contract.wage*payslip.worked_hours
-            else:
-    amount = contract.wage*payslip.working_rate/100
+        amount = contract.wage*payslip.worked_hours
+    else:
+        amount = contract.wage*payslip.working_rate/100
+
     result = contract.provision_13_salary+amount*(employee.company_id.yearlySalaries-12)/12 + PROVISION_13
 else:
     result = 0</field>
