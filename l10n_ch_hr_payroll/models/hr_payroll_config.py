@@ -372,7 +372,7 @@ class HrPayrollConfig(models.TransientModel):
                 'l10n_ch_hr_payroll.BASIC_CH',
                 'l10n_ch_hr_payroll.LAA_E',
                 'l10n_ch_hr_payroll.LCA_E',
-                'l10n_ch_hr_payroll.CLEAR_PROVISION_13'.
+                'l10n_ch_hr_payroll.CLEAR_PROVISION_13',
                 'l10n_ch_hr_payroll.LPP_E'
                 ], config.cc, 'credit')
             config.assign_account_to_rule([
