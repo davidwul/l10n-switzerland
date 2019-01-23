@@ -434,35 +434,25 @@ else:
         <field name="code">PAY_13</field>
         <field name="condition_select">none</field>
         <field name="name">Pay 13th salary provisonned</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence">51</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 if payslip.pay_13_salary:
-    if payslip.wage_type == 'hour':
-        amount = contract.wage*payslip.worked_hours
-    else:
-        amount = contract.wage*payslip.working_rate/100
-
-    result = contract.provision_13_salary+amount*(employee.company_id.yearlySalaries-12)/12
+    result = TOTAL_PROVISION_13 + PROVISION_13
 else:
     result = 0</field>
-        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="category_id" ref="hr_payroll.ALW"/>
     </record>
     <record id="CLEAR_PROVISION_13" model="hr.salary.rule">
         <field name="appears_on_payslip">False</field>
         <field name="code">CLEAR_PROVISION_13</field>
         <field name="condition_select">none</field>
         <field name="name">Clear provision 13 when paid</field>
-        <field name="sequence" eval="1"/>
+        <field name="sequence">210</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 if payslip.pay_13_salary:
-    if payslip.wage_type == 'hour':
-        amount = contract.wage*payslip.worked_hours
-    else:
-        amount = contract.wage*payslip.working_rate/100
-
-    result = contract.provision_13_salary+amount*(employee.company_id.yearlySalaries-12)/12 + PROVISION_13
+    result = TOTAL_PROVISION_13 + PROVISION_13
 else:
     result = 0</field>
         <field name="category_id" ref="hr_payroll.COMP"/>
@@ -525,12 +515,27 @@ else:
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 if payslip.wage_type == 'hour':
-    result = contract.wage*payslip.worked_hours*(employee.company_id.yearlySalaries-12)/12 - PAY_13
+    result = contract.wage*payslip.worked_hours*(employee.company_id.yearlySalaries-12)/12
 else:
-    result = contract.wage*payslip.working_rate/100*(employee.company_id.yearlySalaries-12)/12 - PAY_13
+    result = contract.wage*payslip.working_rate/100*(employee.company_id.yearlySalaries-12)/12
         </field>
         <field name="quantity">1</field>
         <field name="sequence">50</field>
+        <field name="category_id" ref="hr_payroll_INFO"/>
+    </record>
+    <record id="TOTAL_PROVISION_13" model="hr.salary.rule">
+        <field name="amount_select">code</field>
+        <field name="appears_on_payslip">False</field>
+        <field name="code">TOTAL_PROVISION_13</field>
+        <field name="condition_select">none</field>
+        <field name="condition_range_max">999999</field>
+        <field name="name">Total Provision for the 13th salary</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip.amount_13_salary
+        </field>
+        <field name="quantity">1</field>
+        <field name="sequence">40</field>
         <field name="category_id" ref="hr_payroll_INFO"/>
     </record>
 </odoo>

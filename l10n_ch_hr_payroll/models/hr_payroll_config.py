@@ -32,6 +32,7 @@ class HrPayrollConfig(models.TransientModel):
         all_equal = False
 
         all_equal = self.search_account_by_rule([
+            ('l10n_ch_hr_payroll.PROVISION_13', 'debit'),
             ('l10n_ch_hr_payroll.BASIC_CH', 'debit')])
 
         return all_equal
@@ -376,12 +377,12 @@ class HrPayrollConfig(models.TransientModel):
                 'l10n_ch_hr_payroll.LPP_E'
                 ], config.cc, 'credit')
             config.assign_account_to_rule([
-                'l10n_ch_hr_payroll.NET_CH',
-                'l10n_ch_hr_payroll.PROVISION_13'
+                'l10n_ch_hr_payroll.NET_CH'
                 ], config.cc, 'debit')
 
             # basic
             config.assign_account_to_rule([
+                'l10n_ch_hr_payroll.PROVISION_13',
                 'l10n_ch_hr_payroll.BASIC_CH'
             ], config.basic, 'debit')
 
