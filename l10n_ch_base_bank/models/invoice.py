@@ -90,9 +90,12 @@ class AccountInvoice(models.Model):
         """
         if not self.reference:
             return False
-        if re.match(r'^(\d{27}|\d{2}( \d{5}){5})$', self.reference):
+        else:
             ref = self.reference.replace(' ', '')
-            return ref == mod10r(ref[:-1])
+            if len(ref) < 28:
+                return ref == mod10r(ref[:-1])
+            else:
+                return False
         return False
 
     def partner_banks_to_show(self):
