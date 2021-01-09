@@ -24,7 +24,7 @@ class HrSalaryDeclaration(models.Model):
     year = fields.Char()
 
     @api.model
-    def generate_yearly_declaration(self, date_from, date_to):
+    def generate_yearly_declaration(self, date_from, date_to, gross_code, soc_codes, pension_codes):
         payslip_lines_obj = \
             self.env['hr.payslip.line'].search(
                                                 [('slip_id.date_from', '>=', date_from),
@@ -37,12 +37,15 @@ class HrSalaryDeclaration(models.Model):
         bvg_lpp_ded = defaultdict(float)
         d_from = defaultdict(str)
         d_to = defaultdict(str)
+        _logger.info("gross code: %s", gross_code)
+        _logger.info("social codes: %s", soc_codes)
+        _logger.info("pension: %s", pension_codes)
         for line in payslip_lines_obj:
-            if line.code == '5000':
+            if line.code == gross_code:
                 grossincome[line.employee_id.id] += line.total
-            if line.name == 'OBP Employee':
+            if line.code in pension_codes:
                 bvg_lpp_ded[line.employee_id.id] -= line.total
-            if line.code == 'TOTAL_DED':
+            if line.code in soc_codes:
                 social_ded[line.employee_id.id] -= line.total
             if line.slip_id.date_from.strftime('%Y-%m-%d') < d_from[line.employee_id.id] or not d_from[line.employee_id.id]:
                 d_from[line.employee_id.id] = line.slip_id.date_from.strftime('%Y-%m-%d')
@@ -55,7 +58,7 @@ class HrSalaryDeclaration(models.Model):
                 'date_from': d_from[emp],
                 'date_to': d_to[emp],
                 'grossincome': math.floor(grossincome[emp]),
-                'social_ded': math.ceil(social_ded[emp]-bvg_lpp_ded[emp]),
+                'social_ded': math.ceil(social_ded[emp]),
                 'bvg_lpp_ded': math.ceil(bvg_lpp_ded[emp]),
                 'year': date_to.strftime('%Y-%m-%d')[:4]
             }

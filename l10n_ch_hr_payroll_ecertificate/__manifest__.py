@@ -8,6 +8,7 @@
     'author': "Compassion Suisse,Odoo Community Association (OCA)",
     'depends': [
         'l10n_ch_hr_payroll',
+        'partner_firstname',
         'report_xml'
     ],
     'version': '12.0.1.0.0',
