@@ -159,7 +159,7 @@ class AccountPaymentOrder(models.Model):
 
     @api.model
     def generate_remittance_info_block(self, parent_node, line, gen_args):
-        if line.communication_type == "qrr":
+        if line.payment_line_ids[0].communication_type == "qrr":
             remittance_info = etree.SubElement(parent_node, "RmtInf")
             remittance_info_structured = etree.SubElement(remittance_info, "Strd")
             creditor_ref_information = etree.SubElement(
