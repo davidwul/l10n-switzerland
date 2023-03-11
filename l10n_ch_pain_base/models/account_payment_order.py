@@ -76,10 +76,7 @@ class AccountPaymentOrder(models.Model):
         self, parent_node, party_type, order, partner_bank, gen_args, bank_line=None
     ):
         if gen_args.get("pain_flavor") == "pain.001.001.03.ch.02" and bank_line:
-            if bank_line.local_instrument == "CH01":
-                # Don't set the creditor agent on ISR/CH01 payments
-                return True
-            elif not partner_bank.bank_bic:
+            if not partner_bank.bank_bic:
                 raise UserError(
                     _(
                         "For pain.001.001.03.ch.02, for non-ISR payments, "
@@ -101,34 +98,14 @@ class AccountPaymentOrder(models.Model):
     def generate_party_acc_number(
         self, parent_node, party_type, order, partner_bank, gen_args, bank_line=None
     ):
-        if (
-            gen_args.get("pain_flavor") == "pain.001.001.03.ch.02"
-            and bank_line
-            and bank_line.local_instrument == "CH01"
-        ):
-            if not partner_bank.l10n_ch_postal:
-                raise UserError(
-                    _(
-                        "The field 'Postal account' is not set on the bank "
-                        "account '%s'."
-                    )
-                    % partner_bank.acc_number
-                )
-            party_account = etree.SubElement(parent_node, "%sAcct" % party_type)
-            party_account_id = etree.SubElement(party_account, "Id")
-            party_account_other = etree.SubElement(party_account_id, "Othr")
-            party_account_other_id = etree.SubElement(party_account_other, "Id")
-            party_account_other_id.text = partner_bank.l10n_ch_postal
-            return True
-        else:
-            return super().generate_party_acc_number(
-                parent_node,
-                party_type,
-                order,
-                partner_bank,
-                gen_args,
-                bank_line=bank_line,
-            )
+        return super().generate_party_acc_number(
+            parent_node,
+            party_type,
+            order,
+            partner_bank,
+            gen_args,
+            bank_line=bank_line,
+        )
 
     @api.model
     def generate_address_block(self, parent_node, partner, gen_args):
