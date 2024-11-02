@@ -92,6 +92,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ch_pain_base/models/account_move.py:0
 #, python-format
-msgid "Veuillez indiquer une référence QRR correcte dans la référence de paiement.
-"Les banques refuseront votre dossier de paiement dans le cas contraire."
+msgid "Please fill in a correct QRR reference in the payment reference. The banks "
+"will refuse your payment file otherwise."
 msgstr ""
